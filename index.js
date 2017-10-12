@@ -10,9 +10,6 @@ const debug = require('debug')('hodor-api:index');
 // make bluebird default Promise
 Promise = require('bluebird'); // eslint-disable-line no-global-assign
 
-// plugin bluebird promise in mongoose
-mongoose.Promise = Promise;
-
 // connect to mongo db
 // const mongoUri = config.mongo.host;
 // mongoose.connect(mongoUri, { server: { socketOptions: { keepAlive: 1 } } });
