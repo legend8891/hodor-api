@@ -7,7 +7,7 @@
   "private": false,
   "scripts": {
     "start": "gulp serve",
-    "start:debug": "cross-env DEBUG=express-mongoose-es6-rest-api:* npm start",
+    "start:debug": "cross-env DEBUG=hodor-api:* npm start",
     "build": "gulp",
     "lint": "esw *.js server config --color",
     "lint:watch": "npm lint -- --watch",
@@ -78,13 +78,10 @@
     "gulp-nodemon": "^2.0.6",
     "gulp-sourcemaps": "^1.6.0",
     "gulp-util": "^3.0.7",
-    "husky": "^0.13.1",
-    "istanbul": "1.1.0-alpha.1",
     "mocha": "3.2.0",
     "run-sequence": "^1.1.5",
     "supertest": "2.0.1",
-    "supertest-as-promised": "4.0.2",
-    "validate-commit-msg": "^2.6.1"
+    "supertest-as-promised": "4.0.2"
   },
   "license": "MIT",
   "babel": {
