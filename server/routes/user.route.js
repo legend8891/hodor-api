@@ -7,7 +7,7 @@ const router = express.Router(); // eslint-disable-line new-cap
 
 router.route('/')
   /** GET /api/users - Get list of users */
-  .get(userCtrl.list)
+  .get(userCtrl.index)
 
   /** POST /api/users - Create new user */
   .post(validate(paramValidation.createUser), userCtrl.create);
@@ -20,7 +20,7 @@ router.route('/:userId')
   .put(validate(paramValidation.updateUser), userCtrl.update)
 
   /** DELETE /api/users/:userId - Delete user */
-  .delete(userCtrl.remove);
+  .delete(userCtrl.destroy);
 
 /** Load user when API with userId route parameter is hit */
 router.param('userId', userCtrl.load);
