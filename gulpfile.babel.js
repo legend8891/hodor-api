@@ -3,14 +3,17 @@ import gulpLoadPlugins from 'gulp-load-plugins';
 import path from 'path';
 import del from 'del';
 import runSequence from 'run-sequence';
+var debug = require('gulp-debug');
 
 const plugins = gulpLoadPlugins();
 
 const paths = {
-  js: ['./**/*.js', '!dist/**', '!node_modules/**', '!coverage/**'],
+  js: ['./**/*.js', '!dist/**', '!node_modules/**', '!db/migrations/**', '!coverage/**'],
+  // js: ['index.js', 'config/**/*.js', 'db/**/*.js', 'server/**/*.js', '!dist/**', '!node_modules/**', '!db/migrations/**', '!coverage/**'],
   nonJs: ['./package.json', './.gitignore', './.env'],
   tests: './server/tests/*.js'
 };
+
 
 // Clean up dist and coverage directory
 gulp.task('clean', () =>
@@ -27,6 +30,7 @@ gulp.task('copy', () =>
 // Compile ES6 to ES5 and copy to dist
 gulp.task('babel', () =>
   gulp.src([...paths.js, '!gulpfile.babel.js'], { base: '.' })
+    // .pipe(debug())
     .pipe(plugins.newer('dist'))
     .pipe(plugins.sourcemaps.init())
     .pipe(plugins.babel())

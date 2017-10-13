@@ -1,4 +1,22 @@
-import User from '../models/user.model';
+// import app from '../../config/express';
+import pry from 'pryjs';
+var app = require('../../config/express');
+console.log("In user.controller.js")
+console.log("app is");
+console.log(app);
+console.log(global.appInstance);
+
+// eval(pry.it);
+// var User = app.get('models').User;
+
+/**
+ * init user model (User) using app instance
+ */
+function init(app) {
+  eval(pry.it);
+  // User = app.get('models').User;
+}
+
 
 /**
  * Load user and append to req.
