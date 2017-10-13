@@ -13,6 +13,7 @@ import winstonInstance from './winston';
 import routes from '../server/routes/index.route';
 import config from './config';
 import APIError from '../server/helpers/APIError';
+// import pry from 'pryjs';
 
 const app = express();
 
@@ -51,6 +52,7 @@ app.use('/api', routes);
 
 // if error is not an instanceOf APIError, convert it.
 app.use((err, req, res, next) => {
+  // eval(pry.it);
   if (err instanceof expressValidation.ValidationError) {
     // validation error contains errors which is an array of error each containing message[]
     const unifiedErrorMessage = err.errors.map(error => error.messages.join('. ')).join(' and ');

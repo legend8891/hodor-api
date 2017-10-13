@@ -16,8 +16,8 @@ Promise = require('bluebird'); // eslint-disable-line no-global-assign
 // console.log("app is");
 // console.log(app);
 // eval(pry.it);
-app.set('models', require('./db/models'));
-var User = app.get('models').User;
+// app.set('models', require('./db/models'));
+// var User = app.get('models').User;
 // console.log(User);
 // eval(pry.it);
 
@@ -43,5 +43,5 @@ if (!module.parent) {
     console.info(`server started on port ${config.port} (${config.env})`); // eslint-disable-line no-console
   });
 }
-global.appInstance = app;
+
 export default app;
