@@ -13,6 +13,7 @@ import winstonInstance from './winston';
 import routes from '../server/routes/index.route';
 import config from './config';
 import APIError from '../server/helpers/APIError';
+import passport from 'passport';
 // import pry from 'pryjs';
 
 const app = express();
@@ -46,6 +47,12 @@ if (config.env === 'development') {
     colorStatus: true // Color the status code (default green, 3XX cyan, 4XX yellow, 5XX red).
   }));
 }
+
+// initialize passport
+app.use(passport.initialize());
+
+// Bring in defined Passport Strategy
+require('./passport')(passport);
 
 // mount all routes on /api path
 app.use('/api', routes);
