@@ -2,43 +2,51 @@ import jwt from 'jsonwebtoken';
 import httpStatus from 'http-status';
 import APIError from '../helpers/APIError';
 import config from '../../config/config';
-
-// sample user, used for authentication
-const user = {
-  username: 'react',
-  password: 'express'
-};
-
+import db from '../../db/models';
+import pry from 'pryjs';
+var bcrypt = require('bcrypt');
+var User = db.User;
 /**
- * Returns jwt token if valid username and password is provided
- * @param req
- * @param res
- * @param next
- * @returns {*}
- */
+* Returns jwt token if valid username and password is provided
+*/
 function login(req, res, next) {
-  // Ideally you'll fetch this from the db
-  // Idea here was to show how jwt works with simplicity
-  if (req.body.username === user.username && req.body.password === user.password) {
-    const token = jwt.sign({
-      username: user.username
-    }, config.jwtSecret);
-    return res.json({
-      token,
-      username: user.username
-    });
-  }
 
-  const err = new APIError('Authentication error', httpStatus.UNAUTHORIZED, true);
-  return next(err);
+  var authenticationParams = req.body.user;
+  // find the user by email
+  User.findOne({ where: {email: authenticationParams.email} }).then(function(user) {
+    if (!user) {
+      // res.json({ success: false, message: 'Authentication failed. User not found.' });
+      const err = new APIError(`Authentication failed. No user found with email ${authenticationParams.email}`, httpStatus.UNAUTHORIZED, true);
+      return next(err);
+    } else if (user) {
+      // verify if password matches
+      user.verifyPassword(authenticationParams.password, function(error, verificationResult) {
+        if (verificationResult && !error) {
+          // if user is found and password is right
+          // create a token with only our given payload
+          // we don't want to pass in the entire user since that has the password
+          const payload = {
+            user_id: user.id
+          };
+          var token = jwt.sign(payload, config.jwtSecret, {
+            expiresIn: '1440m' // expires in 24 hours
+          });
+
+          // return the information including token as JSON
+          res.json({
+            success: true,
+            token: token
+          });
+        } else {
+          const err = new APIError('Authentication failed. Wrong password', httpStatus.UNAUTHORIZED, true);
+          return next(err);
+        }
+      });
+    }
+  });
+
 }
 
-/**
- * This is a protected route. Will return random number only if jwt token is provided in header.
- * @param req
- * @param res
- * @returns {*}
- */
 function getRandomNumber(req, res) {
   // req.user is assigned by jwt middleware if valid token is provided
   return res.json({

@@ -1,5 +1,6 @@
 import db from '../../db/models';
 import pry from 'pryjs';
+var bcrypt = require('bcrypt');
 var User = db.User;
 
 
@@ -17,13 +18,25 @@ function get(req, res) {
   return res.json(req.user);
 }
 
-
 function create(req, res, next) {
-  User.create(req.body.user)
-	.then((newUser) => {
-		res.json({ user: newUser });
-	})
-  .catch(e => next(e));
+  bcrypt.genSalt(10, function (err, salt) {
+    if (err) {
+      return next(err);
+    }
+    bcrypt.hash(req.body.user.password, salt, function(err, hash) {
+      if (err) {
+        return next(err);
+      }
+      // delete password property from req.body.user
+      delete req.body.user.password
+      req.body.user.encrypted_password = hash;
+      User.create(req.body.user)
+      .then((newUser) => {
+        res.json({ user: newUser });
+      })
+      .catch(e => next(e));
+    });
+  });
 }
 
 function update(req, res, next) {

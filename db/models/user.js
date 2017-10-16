@@ -1,6 +1,8 @@
 'use strict';
+var User;
+var bcrypt = require('bcrypt');
 module.exports = (sequelize, DataTypes) => {
-  var User = sequelize.define('User', {
+  User = sequelize.define('User', {
     first_name: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -23,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
     dob: DataTypes.DATE,
     encrypted_password: {
         type: DataTypes.STRING,
-        allowNull: false,
+        // allowNull: false,
         validate: {
           notEmpty: {
             msg: "lastName passed is empty."
@@ -56,7 +58,22 @@ module.exports = (sequelize, DataTypes) => {
       associate: function(models) {
         // associations can be defined here
       }
+    },
+    instanceMethods: {
+
     }
   });
+
+  User.prototype.verifyPassword = function (password, callbackHandler) {
+    bcrypt.compare(password, this.encrypted_password, function(err, verificationResult) {
+      if (err) {
+        return callbackHandler(err);
+      }
+      callbackHandler(null, verificationResult);
+    });
+  }
+
+
+
   return User;
 };
