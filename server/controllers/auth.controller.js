@@ -31,7 +31,8 @@ function login(req, res, next) {
           var token = jwt.sign(payload, config.jwtSecret, {
             expiresIn: '1440m' // expires in 24 hours
           });
-
+          // set the token in Cookie
+          res.cookie('hodor-token',token, { maxAge: 900000, httpOnly: true });
           // return the information including token as JSON
           res.json({
             success: true,
