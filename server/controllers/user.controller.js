@@ -1,6 +1,8 @@
 import db from '../../db/models';
 import pry from 'pryjs';
 var bcrypt = require('bcrypt');
+import jwt from 'jsonwebtoken';
+import config from '../../config/config';
 var User = db.User;
 
 
@@ -32,7 +34,19 @@ function create(req, res, next) {
       req.body.user.encrypted_password = hash;
       User.create(req.body.user)
       .then((newUser) => {
-        res.json({ user: newUser });
+        const payload = {
+          user_id: newUser.id
+        };
+        var token = jwt.sign(payload, config.jwtSecret, {
+          expiresIn: '1440m' // expires in 24 hours
+        });
+        // set the token in Cookie
+        res.cookie('hodor-token',token, { maxAge: 900000, httpOnly: true });
+        // return the information including token as JSON
+        res.json({
+          success: true,
+          user: newUser
+        });
       })
       .catch(e => next(e));
     });
