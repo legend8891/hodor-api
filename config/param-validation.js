@@ -7,8 +7,8 @@ export default {
       user: {
         first_name: Joi.string().required(),
         last_name: Joi.string().required(),
-        gender: Joi.string().required(),
-        dob: Joi.date(),
+        // gender: Joi.string().required(),
+        // dob: Joi.date(),
         email: Joi.string().email()
       }
     }
