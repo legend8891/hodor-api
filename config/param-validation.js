@@ -33,5 +33,16 @@ export default {
         password: Joi.string().required()
       }
     }
+  },
+
+  updateTodoState: {
+    body: {
+      todo: {
+        status: Joi.string().required(),
+      }
+    },
+    params: {
+      todoId: Joi.string().hex().required()
+    }
   }
 };
